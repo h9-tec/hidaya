@@ -55,9 +55,6 @@ button{font:inherit; -webkit-tap-highlight-color:transparent; touch-action:manip
 .jump{appearance:none; background:none; border:0; font-family:"JetBrains Mono",monospace; font-size:.72rem; letter-spacing:.04em; color:var(--ink); cursor:pointer; border-bottom:2px solid var(--ink); padding:0 0 2px}
 .jump:hover{color:var(--red); border-color:var(--red)}
 .bar-line{max-width:var(--maxw); margin:12px auto 0; height:1px; background:var(--rule-strong)}
-.testbar{display:none; max-width:var(--maxw); margin:10px auto 0; padding:9px 14px; border:1px dashed var(--blue); color:var(--blue); font-family:"JetBrains Mono",monospace; font-size:.74rem; letter-spacing:.03em; align-items:center; gap:10px 16px; flex-wrap:wrap}
-body.testmode .testbar{display:flex}
-.testbar button{appearance:none; cursor:pointer; background:none; border:0; border-bottom:1px solid var(--blue); color:var(--blue); font-family:inherit; font-size:inherit; padding:0}
 
 /* hero */
 .hero{max-width:var(--maxw); margin-inline:auto; padding-block:clamp(34px,8vh,82px) clamp(26px,5vh,52px)}
@@ -159,15 +156,9 @@ body.testmode .testbar{display:flex}
 .q.correct .opt.answer .ox::after{content:" ✓"; color:var(--green); font-weight:600}
 .q-explain{display:none; margin-top:8px; font-size:.95rem; color:var(--ink-soft); font-style:italic; padding-left:14px; border-left:2px solid var(--green)}
 .q.correct .q-explain{display:block}
-.q.revealed .opt.answer{border-color:var(--blue); background:rgba(44,61,107,.09)}
-.q.revealed .opt.answer .ox::after{content:" ← answer key"; color:var(--blue); font-family:"JetBrains Mono",monospace; font-size:.75em}
-.q.revealed .q-explain{display:block; border-left-color:var(--blue)}
 .quiz-foot{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:14px}
 .btn-check{appearance:none; cursor:pointer; font-family:"JetBrains Mono",monospace; font-size:.82rem; letter-spacing:.06em; color:var(--paper); background:var(--ink); border:0; padding:.7em 1.4em; transition:background .18s}
 .btn-check:hover{background:var(--red)}
-.btn-reveal{display:none; appearance:none; cursor:pointer; font-family:"JetBrains Mono",monospace; font-size:.78rem; letter-spacing:.06em; color:var(--blue); background:none; border:1px solid var(--blue); padding:.62em 1.1em}
-.btn-reveal:hover{background:var(--blue); color:var(--paper)}
-body.testmode .btn-reveal{display:inline-block}
 .quiz-msg{font-family:"JetBrains Mono",monospace; font-size:.8rem; letter-spacing:.02em}
 .quiz-msg.bad{color:var(--red)}
 .quiz-msg.good{color:var(--green)}
@@ -184,8 +175,7 @@ footer a:hover{text-decoration:underline}
   .jump{min-height:44px; display:inline-flex; align-items:center}
   .tab{min-height:44px}
   .opt{min-height:48px; align-items:center}
-  .btn-check,.btn-reveal{min-height:48px}
-  .testbar button{min-height:44px}
+  .btn-check{min-height:48px}
 }
 @media(max-width:620px){
   body{font-size:17px}
@@ -203,7 +193,7 @@ footer a:hover{text-decoration:underline}
   .l-num{display:none}
   .l-titles{grid-column:2}
   .l-state{grid-column:2; grid-row:2; justify-self:start; margin-top:4px}
-  .l-sub,.l-state,.quiz-h .e,.embed-cap,.st-en,.st-right,.testbar,.tab{font-size:.76rem}
+  .l-sub,.l-state,.quiz-h .e,.embed-cap,.st-en,.st-right,.tab{font-size:.76rem}
   .tab{padding:0 13px}
   .stage.page{height:66vh; min-height:340px}
   .embed-cap{margin-top:10px}
@@ -211,7 +201,7 @@ footer a:hover{text-decoration:underline}
   .quiz{margin-top:22px}
   .opt{padding:12px}
   .quiz-foot{flex-direction:column; align-items:stretch}
-  .btn-check,.btn-reveal{width:100%; text-align:center}
+  .btn-check{width:100%; text-align:center}
   .quiz-msg{text-align:center}
   .noembed{padding:18px 16px}
   .noembed a.go{display:block; text-align:center; padding:.9em 1em}
@@ -241,13 +231,6 @@ footer a:hover{text-decoration:underline}
     </div>
     <div class="bar-line"></div>
   </div>
-  <div class="gutter">
-    <div class="testbar" id="testbar">
-      <span>TEST MODE · every lesson is open · “show answers” appears in each quiz</span>
-      <button id="testOff">turn off</button>
-      <button id="resetBtn">reset progress</button>
-    </div>
-  </div>
 
   <header class="hero gutter">
     <div class="hero-kicker"><span class="n">↓</span><span>a free, gated path from bewilderment to computational linguistics</span></div>
@@ -271,7 +254,7 @@ footer a:hover{text-decoration:underline}
     <p class="big">خُذْ بيدِ الحائرِ حتى يستبينَ له الطريق.</p>
     <p class="en">“هداية الحيارى” answers Maimonides' <em>Guide for the Perplexed</em> (دلالة الحائرين). Every video and course page belongs to its authors and is embedded from its official source. The short checks are original.</p>
     <div class="meta">
-      <span>learn in order · pass to continue</span>
+      <span>learn in order · pass to continue · <button class="jump" id="resetBtn">reset my progress</button></span>
       <span><a href="https://github.com/h9-tec/arabic-ai-atlas" target="_blank" rel="noopener">Arabic AI Atlas ↗</a></span>
     </div>
   </footer>
@@ -289,13 +272,6 @@ const KEY="hidaya.v4.passed";
 let passed=new Set();
 try{ const raw=localStorage.getItem(KEY); if(raw) passed=new Set(JSON.parse(raw)); }catch(e){}
 const save=()=>{ try{ localStorage.setItem(KEY, JSON.stringify([...passed])); }catch(e){} };
-let TEST=false;
-function readTest(){
-  let on=/(^|[#&])test($|&)/.test(location.hash);
-  try{ if(on) localStorage.setItem("hidaya.test","1"); else if(location.hash==="#live") localStorage.removeItem("hidaya.test"); else on = localStorage.getItem("hidaya.test")==="1"; }catch(e){}
-  return on;
-}
-TEST=readTest();
 const frontier = () => { let i=0; while(i<ORDER.length && passed.has(ORDER[i])) i++; return i; };
 
 const esc=s=>String(s==null?"":s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -327,7 +303,6 @@ STATIONS.forEach((s,si)=>{
           ${quiz}
           <div class="quiz-foot">
             <button class="btn-check" type="button">تحقَّق · Check</button>
-            <button class="btn-reveal" type="button">show answers</button>
             <span class="quiz-msg" role="status"></span>
           </div>
         </div>
@@ -406,7 +381,7 @@ let calm=0;
 function refresh(){
   const fr=frontier();
   document.querySelectorAll(".lesson").forEach(el=>{
-    const id=el.dataset.id, idx=ORDER.indexOf(id), done=passed.has(id), unlocked=TEST||idx<=fr;
+    const id=el.dataset.id, idx=ORDER.indexOf(id), done=passed.has(id), unlocked=idx<=fr;
     el.classList.toggle("done", done);
     el.classList.toggle("locked", !unlocked);
     el.querySelector(".l-state").textContent = done?"✓ DONE" : unlocked?(idx===fr?"OPEN · →":"OPEN") : "LOCKED";
@@ -422,7 +397,6 @@ function refresh(){
   barCount.textContent=`${pad2(d)} / ${pad2(tot)}`;
   barFill.style.width=(tot?Math.round(d/tot*100):0)+"%";
   calm=tot?d/tot:0;
-  document.body.classList.toggle("testmode", TEST);
 }
 
 stationsEl.addEventListener("click", e=>{
@@ -434,17 +408,12 @@ stationsEl.addEventListener("click", e=>{
     }
     expand(el); return;
   }
-  const rb=e.target.closest(".btn-reveal");
-  if(rb){
-    rb.closest(".quiz").querySelectorAll(".q").forEach(q=>{ q.classList.add("revealed"); q.querySelectorAll(".opt")[+q.dataset.answer].classList.add("answer"); });
-    return;
-  }
   const btn=e.target.closest(".btn-check"); if(!btn) return;
   const quiz=btn.closest(".quiz"), id=quiz.dataset.id;
   let answered=true, allRight=true;
   quiz.querySelectorAll(".q").forEach(q=>{
     const ans=+q.dataset.answer, sel=q.querySelector("input:checked");
-    q.classList.remove("correct","wrong","revealed");
+    q.classList.remove("correct","wrong");
     q.querySelectorAll(".opt").forEach(o=>o.classList.remove("chosen","answer"));
     if(!sel){ answered=false; allRight=false; return; }
     sel.closest(".opt").classList.add("chosen");
@@ -473,14 +442,13 @@ function goToCurrent(){
 }
 document.getElementById("beginBtn").addEventListener("click", goToCurrent);
 document.getElementById("jumpBtn").addEventListener("click", goToCurrent);
-document.getElementById("testOff").addEventListener("click", ()=>{ try{ localStorage.removeItem("hidaya.test"); }catch(e){} TEST=false; if(location.hash==="#test") history.replaceState(null,"",location.pathname+location.search); refresh(); });
 let armed=false;
 document.getElementById("resetBtn").addEventListener("click", ev=>{
   const b=ev.currentTarget;
   if(!armed){ armed=true; b.textContent="click again to erase progress"; setTimeout(()=>{ armed=false; b.textContent="reset progress"; },3000); return; }
   passed.clear(); save(); armed=false; b.textContent="reset progress";
   document.querySelectorAll(".lesson.expanded").forEach(el=>expand(el,false));
-  document.querySelectorAll(".q").forEach(q=>q.classList.remove("correct","wrong","revealed"));
+  document.querySelectorAll(".q").forEach(q=>q.classList.remove("correct","wrong"));
   document.querySelectorAll(".opt").forEach(o=>o.classList.remove("chosen","answer"));
   document.querySelectorAll(".quiz-msg").forEach(m=>m.textContent="");
   document.querySelectorAll(".quiz input:checked").forEach(i=>{ i.checked=false; });
@@ -491,7 +459,7 @@ function openFromHash(){
   const el=document.getElementById(m[1]);
   if(el && !el.classList.contains("locked")){ expand(el,true); el.scrollIntoView(); }
 }
-addEventListener("hashchange", ()=>{ TEST=readTest(); refresh(); openFromHash(); });
+addEventListener("hashchange", ()=>{ refresh(); openFromHash(); });
 
 refresh();
 (function openCurrent(){
